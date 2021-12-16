@@ -10,12 +10,8 @@ using Microsoft.Extensions.Logging;
 
 namespace API.Controllers
 {
-  [ApiController]
-  [Route("[controller]")]
-  public class ProductsController : ControllerBase
+  public class ProductsController : BaseApiController
   {
-
-
     private readonly ILogger<WeatherForecastController> _logger;
     private readonly StoreContext _storeContext;
 
@@ -36,7 +32,12 @@ namespace API.Controllers
     [HttpGet("{id}")]
     public async Task<ActionResult<Product>> GetProductById(int id)
     {
-      return Ok(await _storeContext.Products.FindAsync(id));
+      var product = await _storeContext.Products.FindAsync(id);
+      if(product==null)
+      {
+        return NotFound();
+      }
+      return product;
     }
   }
 }
